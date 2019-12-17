@@ -10,6 +10,7 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 		if (Is_Surname_Corr(surnam))
 		{
 			for (int i = 0; i < 64; i++)
+				if ((int)surnam[i] != -52)
 				surname[i] = surnam[i];
 		}
 		else
@@ -19,6 +20,7 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 		if (Is_Name_Corr(nam))
 		{
 			for (int i = 0; i < 64; i++)
+				if ((int)nam[i] != -52)
 				name[i] = nam[i];
 		}
 		else
@@ -35,10 +37,17 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 		if (Is_City_Corr(town))
 		{
 			for (int i = 0; i < 64; i++)
+				if ((int)town[i] != -52)
 				city[i] = town[i];
 		}
 		else
 			cout << "The city is incorrect" << endl;
+
+		// Occupation
+		for (int i = 0; i < 64; i++)
+			if ((int)occ[i] != -52)
+				job[i] = occ[i];
+
 
 		// Birthdate
 		if (Is_Birth_Corr(year1, month1, day1))
@@ -58,7 +67,8 @@ void Kont::Write(FILE* a)
 	// writing a surname
 	for (char qw : surname)
 	{
-		fwrite(&qw, sizeof(char), 1, a);
+		if ((int)qw != -52)
+			fwrite(&qw, sizeof(char), 1, a);
 	}
 
 	// separate surname and name
@@ -68,7 +78,8 @@ void Kont::Write(FILE* a)
 	// writing a name
 	for (char qw : name)
 	{
-		fwrite(&qw, sizeof(char), 1, a);
+		if ((int)qw != -52)
+			fwrite(&qw, sizeof(char), 1, a);
 	}
 	fwrite(&uy, sizeof(char), 1, a);
 
@@ -89,7 +100,8 @@ void Kont::Write(FILE* a)
 
 	// writing city
 	for (char qw : city)
-		fwrite(&qw, sizeof(char), 1, a);
+		if ((int)qw != -52)
+			fwrite(&qw, sizeof(char), 1, a);
 
 	// separate city and occupation
 	uy = ' ';
@@ -97,7 +109,8 @@ void Kont::Write(FILE* a)
 
 	// writing occupation
 	for (char qw : job)
-		fwrite(&qw, sizeof(char), 1, a);
+		if ((int)qw != -52)
+			fwrite(&qw, sizeof(char), 1, a);
 
 	// separate occupation and birthdate
 	uy = ' ';
@@ -238,15 +251,15 @@ void Kont::AddCont(FILE* a)
 	int year, month, day;
 
 	cout << "Enter a surname: ";
-	cin.getline(surname, 64,';');
+	cin.getline(surname, 65);
 	cout << "Enter a name: ";
-	cin.getline(name, 64,';');
+	cin.getline(name, 65);
 	cout << "Enter the number: +380";
-	cin.getline(nom, 9,';');
+	cin.getline(nom, 10);
 	cout << "Enter a native city: ";
-	cin.getline(city, 64,';');
+	cin.getline(city, 65);
 	cout << "Enter an occupation: ";
-	cin.getline(job, 64,';');
+	cin.getline(job, 65);
 	cout << "Enter your birthdate:" << endl;
 	cout << "Year: ";
 	cin >> year;
@@ -282,7 +295,9 @@ void Kont::AddCont(FILE* a)
 
 	system("cls");
 	cout << "The contact was successfully added" << endl;
+	cout << endl;
 	ret.Display();
+	cout << endl;
 	system("pause");
 	system("cls");
 
@@ -773,6 +788,6 @@ void Kont::ChangeBirth()
 int Kont::strlength(char* str)
 {
 	int i = 0;
-	while (str[i] != '\0') i++;
+	while ((int)str[i] > 0) i++;
 	return i;
 }
